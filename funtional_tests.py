@@ -15,22 +15,32 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         str_todo_item ='Buy peacock feathers'
+        str_url = 'http://localhost:8000'
+        str_todo = 'To-Do'
 
+        self.browser.get(str_url)
 
-        self.browser.get('http://localhost:8000')
-
-        self.assertIn('To-Do',  self.browser.title)
+        self.assertIn(str_todo,  self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('To-Do', header_text)
+        self.assertIn(str_todo, header_text)
 
         inputBox = self.browser.find_element_by_id('id_new_item')
         self.assertEqual(inputBox.get_attribute('placeholder'), 'Enter a to-do item')
 
         inputBox.send_keys(str_todo_item)
+        inputBox.send_keys(Keys.ENTER)
+
+        inputBox = self.browser.find_element_by_id('id_new_item')
+        inputBox.send_keys('Use peacock feathers to make a fly')
+        inputBox.send_keys(Keys.ENTER)
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == '1: '+ str_todo_item for row in rows), 'New to-do item did not appear in table.')
+
+        self.assertIn('1: '+str_todo_item, [row.text for row in rows] )
+        self.assertIn('2: Use peacock feathers to make a fly', [row.text for row in rows] )
+
+
 
         self.fail('Finish the test!')
 
