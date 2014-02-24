@@ -1,9 +1,11 @@
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest, response
 from django.template.loader import render_to_string
+
 from django.test import TestCase
 from lists.views import home_page
 from lists.models import Item
+from django.test import LiveServerTestCase
 
 # Create your tests here.
 

@@ -2,9 +2,10 @@ __author__ = 'continueing'
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
+from django.test import LiveServerTestCase
 
-class NewVisitorTest(unittest.TestCase):
+
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
         #self.browser.implicitly_wait(3)
@@ -20,10 +21,9 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         str_todo_item ='Buy peacock feathers'
-        str_url = 'http://localhost:8000'
         str_todo = 'To-Do'
 
-        self.browser.get(str_url)
+        self.browser.get(self.live_server_url)
 
         self.assertIn(str_todo,  self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
@@ -46,9 +46,5 @@ class NewVisitorTest(unittest.TestCase):
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
 
         self.fail('Finish the test!')
-
-if __name__ == '__main__':
-    unittest.main(warnings = 'ignore')
-
 
 
