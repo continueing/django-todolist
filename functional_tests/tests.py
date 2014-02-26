@@ -35,7 +35,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputBox.send_keys(str_todo_item)
         inputBox.send_keys(Keys.ENTER)
         edith_list_url = self.browser.current_url
-        self.assertRegex(edith_list_url, '/list/.+')
+        self.assertRegex(edith_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: '+str_todo_item)
 
         inputBox = self.browser.find_element_by_id('id_new_item')
@@ -67,8 +67,6 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn(str_todo_item, page_text)
         self.assertIn('Buy milk', page_text)
-
-
 
 
         self.fail('Finish the test!')
