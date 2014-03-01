@@ -1,3 +1,5 @@
+import sys
+
 __author__ = 'continueing'
 
 from selenium import webdriver
@@ -6,6 +8,21 @@ from django.test import LiveServerTestCase
 
 
 class NewVisitorTest(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.live_server_url = 'http://' + arg.split('=')[1]
+                return
+        LiveServerTestCase.setUpClass()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.server_url == cls.live_server_url:
+            LiveServerTestCase.tearDownClass()
+
     def setUp(self):
         self.browser = webdriver.Firefox()
         #self.browser.implicitly_wait(3)
@@ -23,7 +40,7 @@ class NewVisitorTest(LiveServerTestCase):
         str_todo_item ='Buy peacock feathers'
         str_todo = 'To-Do'
 
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
 
         self.assertIn(str_todo,  self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
@@ -51,7 +68,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.quit()
         self.browser = webdriver.Firefox()
 
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn(str_todo_item, page_text)
         self.assertNotIn('make a fly', page_text)
@@ -69,7 +86,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('Buy milk', page_text)
 
     def test_layout_and_styling(self):
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.set_window_size(1024,768)
 
         inputbox = self.browser.find_element_by_id('id_new_item')
