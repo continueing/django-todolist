@@ -1,4 +1,5 @@
 import sys
+from unittest import skip
 
 __author__ = 'continueing'
 
@@ -7,8 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from django.test import LiveServerTestCase
 
 
-class NewVisitorTest(LiveServerTestCase):
-
+class FunctionalTest(LiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         for arg in sys.argv:
@@ -36,6 +36,8 @@ class NewVisitorTest(LiveServerTestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
 
+
+class NewVisitorTest(FunctionalTest):
     def test_can_start_a_list_and_retrieve_it_later(self):
         str_todo_item ='Buy peacock feathers'
         str_todo = 'To-Do'
@@ -85,12 +87,34 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn(str_todo_item, page_text)
         self.assertIn('Buy milk', page_text)
 
+class LayoutAndStylingTest(FunctionalTest):
     def test_layout_and_styling(self):
         self.browser.get(self.server_url)
         self.browser.set_window_size(1024,768)
 
         inputbox = self.browser.find_element_by_id('id_new_item')
         self.assertAlmostEqual(inputbox.location['x'] + inputbox.size['width'] / 2, 512, delta=5)
+
+class ItemValidationTest(FunctionalTest):
+    @skip
+    def test_cannnot_add_empty_list_items(self):
+        # Edith goes to the home page and accidentally tries to submit
+        # an empty list item. She hits Enter on the empty input box
+
+        # The home page refreshes, and there is an error message saying
+        # that list items cannot be blank
+
+        # She tries again with some text for the item, which now works
+
+        # Perversely, she now decides to submit a second blank list item
+
+        # she receives a similar warning on the list page
+
+        # And she can correct it by filling some text in
+
+
+
+        self.fail('write me!')
 
 
 
